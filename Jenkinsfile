@@ -53,9 +53,9 @@ pipeline {
                         
                         // Deploy the Kubernetes deployment and service YAML files
                         sh 'kubectl delete -f my-survey-app-deployment.yaml'
-                        sh 'kubectl delete -f my-survey-app-service.yaml'
+                        //sh 'kubectl delete -f my-survey-app-service.yaml'
                         sh 'kubectl apply -f my-survey-app-deployment.yaml --validate=false'
-                        sh 'kubectl apply -f my-survey-app-service.yaml --validate=false'
+                        //sh 'kubectl apply -f my-survey-app-service.yaml --validate=false'
                     }
                 }
             }
