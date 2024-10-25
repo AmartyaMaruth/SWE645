@@ -38,6 +38,7 @@ pipeline {
                     // Remove any existing repo and clone the GitHub repository to fetch the YAML file
                     sh 'rm -rf SWE645'
                     sh 'git clone https://github.com/AmartyaMaruth/SWE645.git'
+                    sh 'cd SWE645'
                 }
             }
         }
@@ -48,7 +49,7 @@ pipeline {
                     // Use kubeconfig for Kubernetes authentication
                     withCredentials([file(credentialsId: KUBECONFIG_CREDENTIALS_ID, variable: 'KUBECONFIG')]) {
                         // Apply the Kubernetes deployment YAML using kubectl
-                        sh 'kubectl apply -f SWE645/k8s/my-survey-app-deployment.yaml --validate=false'
+                        sh 'kubectl apply -f my-survey-app-deployment.yaml --validate=false'
                     }
                 }
             }
