@@ -24,7 +24,7 @@ pipeline {
             steps {
                 script {
                     // Navigate into the cloned directory and build the Docker image using the Dockerfile from the repo
-                    sh 'docker build -t ${DOCKER_IMAGE} ./SWE645'
+                    sh 'docker build -t ${DOCKER_IMAGE} .'
                 }
             }
         }
