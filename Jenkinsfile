@@ -53,6 +53,7 @@ pipeline {
                         
                         // Apply the Kubernetes deployment YAML using kubectl
                         sh 'kubectl apply -f my-survey-app-deployment.yaml --validate=false'
+                        sh 'kubectl apply -f my-survey-app-service.yaml --validate=false'
                     }
                 }
             }
