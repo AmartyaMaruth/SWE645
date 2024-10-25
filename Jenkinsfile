@@ -36,7 +36,7 @@ pipeline {
             steps {
                 script {
                     // Clone the GitHub repository or fetch the YAML file
-                    
+                        sh 'rm -rf SWE645'
                         sh 'git clone https://github.com/AmartyaMaruth/SWE645.git'
                         sh 'cp survey-app/k8s/my-survey-app-deployment.yaml .'
                     
