@@ -3,7 +3,7 @@ pipeline {
     environment {
         DOCKER_IMAGE = "232183/my-survey-app:latest"
         DOCKER_CREDENTIALS_ID = 'docker_id'  // Use the correct credential ID (docker_id)
-        GIT_REPO = 'https://github.com/your-repo/survey-app.git'  // Replace with your GitHub repo URL
+        GIT_REPO = 'https://github.com/AmartyaMaruth/SWE645.git'  // Replace with your GitHub repo URL
        // GIT_CREDENTIALS_ID = 'git_id'  // Use the correct GitHub credential ID
     }
     
@@ -37,7 +37,7 @@ pipeline {
                 script {
                     // Clone the GitHub repository or fetch the YAML file
                     
-                        sh 'git clone https://$GIT_USER:$GIT_PASS@github.com/your-repo/survey-app.git'
+                        sh 'git clone https://github.com/AmartyaMaruth/SWE645.git'
                         sh 'cp survey-app/k8s/my-survey-app-deployment.yaml .'
                     
                 }
