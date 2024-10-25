@@ -4,7 +4,7 @@ pipeline {
         DOCKER_IMAGE = "232183/my-survey-app:latest"
         DOCKER_CREDENTIALS_ID = 'docker_id'  // Use the correct credential ID (docker_id)
         GIT_REPO = 'https://github.com/AmartyaMaruth/SWE645.git'  // Replace with your GitHub repo URL
-       // GIT_CREDENTIALS_ID = 'git_id'  // Use the correct GitHub credential ID
+        KUBECONFIG_CREDENTIALS_ID = 'kubeconfig_id' // Kubernetes config credential ID
     }
     
     stages {
@@ -35,11 +35,9 @@ pipeline {
         stage('Fetch Kubernetes Deployment YAML') {
             steps {
                 script {
-                    // Clone the GitHub repository or fetch the YAML file
-                        sh 'rm -rf SWE645'
-                        sh 'git clone https://github.com/AmartyaMaruth/SWE645.git'
-                        sh 'cd SWE645'
-                    
+                    // Remove any existing repo and clone the GitHub repository to fetch the YAML file
+                    sh 'rm -rf SWE645'
+                    sh 'git clone https://github.com/AmartyaMaruth/SWE645.git'
                 }
             }
         }
@@ -47,8 +45,11 @@ pipeline {
         stage('Deploy to Kubernetes') {
             steps {
                 script {
-                    // Deploy to Kubernetes using kubectl
-                    sh 'kubectl apply -f my-survey-app-deployment.yaml --validate=false'
+                    // Use kubeconfig for Kubernetes authentication
+                    withCredentials([file(credentialsId: KUBECONFIG_CREDENTIALS_ID, variable: 'KUBECONFIG')]) {
+                        // Apply the Kubernetes deployment YAML using kubectl
+                        sh 'kubectl apply -f SWE645/k8s/my-survey-app-deployment.yaml --validate=false'
+                    }
                 }
             }
         }
