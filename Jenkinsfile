@@ -3,17 +3,28 @@ pipeline {
     environment {
         DOCKER_IMAGE = "232183/my-survey-app:latest"
         DOCKER_CREDENTIALS_ID = 'docker_id'  // Use the correct credential ID (docker_id)
-        GIT_REPO = 'https://github.com/AmartyaMaruth/SWE645.git'  // Replace with your GitHub repo URL
+        GIT_REPO = 'https://github.com/AmartyaMaruth/SWE645.git'  // GitHub repo URL
         KUBECONFIG_CREDENTIALS_ID = 'kubeconfig_id' // Kubernetes config credential ID
         AWS_CREDENTIALS_ID = 'aws_credentials_id' // AWS credentials ID (for AWS credentials type)
     }
     
     stages {
+        stage('Clone Git Repository') {
+            steps {
+                script {
+                    // Remove any existing repo and clone the GitHub repository to fetch the Dockerfile and other resources
+                    sh 'rm -rf SWE645'
+                    sh 'git clone ${GIT_REPO}'
+                    sh 'cd SWE645'
+                }
+            }
+        }
+
         stage('Build Docker Image') {
             steps {
                 script {
-                    // Build the Docker image
-                    sh "docker build -t ${DOCKER_IMAGE} ."
+                    // Navigate into the cloned directory and build the Docker image using the Dockerfile from the repo
+                    sh 'docker build -t ${DOCKER_IMAGE} ./SWE645'
                 }
             }
         }
@@ -33,17 +44,6 @@ pipeline {
             }
         }
 
-        stage('Fetch Kubernetes Deployment YAML') {
-            steps {
-                script {
-                    // Remove any existing repo and clone the GitHub repository to fetch the YAML file
-                    sh 'rm -rf SWE645'
-                    sh 'git clone https://github.com/AmartyaMaruth/SWE645.git'
-                    sh 'cd SWE645'
-                }
-            }
-        }
-
         stage('Deploy to Kubernetes') {
             steps {
                 script {
@@ -51,9 +51,9 @@ pipeline {
                     withCredentials([file(credentialsId: KUBECONFIG_CREDENTIALS_ID, variable: 'KUBECONFIG'),
                                      [$class: 'AmazonWebServicesCredentialsBinding', credentialsId: AWS_CREDENTIALS_ID]]) {
                         
-                        // Apply the Kubernetes deployment YAML using kubectl
-                        sh 'kubectl apply -f my-survey-app-deployment.yaml --validate=false'
-                        sh 'kubectl apply -f my-survey-app-service.yaml --validate=false'
+                        // Deploy the Kubernetes deployment and service YAML files
+                        sh 'kubectl apply -f SWE645/k8s/my-survey-app-deployment.yaml --validate=false'
+                        sh 'kubectl apply -f SWE645/k8s/my-survey-app-service.yaml --validate=false'
                     }
                 }
             }
