@@ -52,6 +52,8 @@ pipeline {
                                      [$class: 'AmazonWebServicesCredentialsBinding', credentialsId: AWS_CREDENTIALS_ID]]) {
                         
                         // Deploy the Kubernetes deployment and service YAML files
+                        sh 'kubectl delete -f my-survey-app-deployment.yaml --validate=false'
+                        sh 'kubectl delete -f my-survey-app-service.yaml --validate=false'
                         sh 'kubectl apply -f my-survey-app-deployment.yaml --validate=false'
                         sh 'kubectl apply -f my-survey-app-service.yaml --validate=false'
                     }
