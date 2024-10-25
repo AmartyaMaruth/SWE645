@@ -48,7 +48,7 @@ pipeline {
             steps {
                 script {
                     // Deploy to Kubernetes using kubectl
-                    sh 'kubectl apply -f my-survey-app-deployment.yaml'
+                    sh 'kubectl apply -f my-survey-app-deployment.yaml --validate=false'
                 }
             }
         }
