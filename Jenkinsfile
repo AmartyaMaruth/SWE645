@@ -49,7 +49,7 @@ pipeline {
                     // Use kubeconfig for Kubernetes authentication
                     withCredentials([file(credentialsId: KUBECONFIG_CREDENTIALS_ID, variable: 'KUBECONFIG')]) {
                         // Apply the Kubernetes deployment YAML using kubectl
-                        sh 'kubectl apply -f my-survey-app-deployment.yaml --validate=false'
+                        sh 'kubectl apply -f my-survey-app-deployment.yaml'
                     }
                 }
             }
