@@ -3,6 +3,8 @@ pipeline {
     environment {
         DOCKER_IMAGE = "232183/my-survey-app:latest"
         DOCKER_CREDENTIALS_ID = 'docker_id'  // Use the correct credential ID (docker_id)
+        GIT_REPO = 'https://github.com/your-repo/survey-app.git'  // Replace with your GitHub repo URL
+        GIT_CREDENTIALS_ID = 'git_id'  // Use the correct GitHub credential ID
     }
     
     stages {
@@ -25,6 +27,18 @@ pipeline {
                         
                         // Push the Docker image to Docker Hub
                         sh "docker push ${DOCKER_IMAGE}"
+                    }
+                }
+            }
+        }
+
+        stage('Fetch Kubernetes Deployment YAML') {
+            steps {
+                script {
+                    // Clone the GitHub repository or fetch the YAML file
+                    withCredentials([usernamePassword(credentialsId: GIT_CREDENTIALS_ID, usernameVariable: 'GIT_USER', passwordVariable: 'GIT_PASS')]) {
+                        sh 'git clone https://$GIT_USER:$GIT_PASS@github.com/your-repo/survey-app.git'
+                        sh 'cp survey-app/k8s/my-survey-app-deployment.yaml .'
                     }
                 }
             }
